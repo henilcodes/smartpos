@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Products\Tables;
 
+use App\Models\Brand;
 use App\Models\Product;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
@@ -24,35 +25,43 @@ class ProductsTable
             ->columns([
                 TextColumn::make('name')
                     ->label('Product')
-                    ->searchable()
+                    ->searchable(['name', 'sku', 'barcode'])
                     ->sortable()
                     ->weight('medium')
-                    ->description(fn (Product $record): ?string => filled($record->barcode)
-                        ? "Barcode: {$record->barcode}"
+                    ->description(fn (Product $record): ?string => filled($record->sku)
+                        ? "SKU: {$record->sku}"
                         : null),
 
-                TextColumn::make('category')
+                TextColumn::make('brand.name')
+                    ->label('Brand')
                     ->badge()
                     ->color('info')
-                    ->placeholder('Uncategorized')
-                    ->searchable()
+                    ->sortable()
+                    ->searchable(),
+
+                TextColumn::make('categories.name')
+                    ->label('Categories')
+                    ->badge()
+                    ->separator(',')
+                    ->placeholder('None')
+                    ->toggleable(),
+
+                TextColumn::make('qty')
+                    ->label('Qty')
+                    ->alignEnd()
+                    ->sortable(),
+
+                TextColumn::make('mrp')
+                    ->label('MRP')
+                    ->money('INR')
+                    ->alignEnd()
                     ->sortable(),
 
                 TextColumn::make('unit')
                     ->label('Unit')
                     ->badge()
-                    ->color('gray'),
-
-                TextColumn::make('tax_rate')
-                    ->label('Tax')
-                    ->suffix('%')
-                    ->alignEnd()
-                    ->sortable(),
-
-                TextColumn::make('reorder_level')
-                    ->label('Reorder')
-                    ->alignEnd()
-                    ->sortable(),
+                    ->color('gray')
+                    ->placeholder('—'),
 
                 TextColumn::make('is_active')
                     ->label('Status')
@@ -61,11 +70,11 @@ class ProductsTable
                     ->color(fn (bool $state): string => $state ? 'success' : 'danger')
                     ->sortable(),
 
-                TextColumn::make('track_expiry')
-                    ->label('Expiry tracking')
-                    ->badge()
-                    ->formatStateUsing(fn (bool $state): string => $state ? 'Enabled' : 'Disabled')
-                    ->color(fn (bool $state): string => $state ? 'warning' : 'gray')
+                TextColumn::make('expired_at')
+                    ->label('Expiry')
+                    ->date('d M Y')
+                    ->placeholder('—')
+                    ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('created_at')
@@ -83,20 +92,17 @@ class ProductsTable
                     ->trueLabel('Active only')
                     ->falseLabel('Inactive only'),
 
-                SelectFilter::make('category')
-                    ->options(fn (): array => Product::query()
-                        ->whereNotNull('category')
-                        ->where('category', '!=', '')
-                        ->distinct()
-                        ->orderBy('category')
-                        ->pluck('category', 'category')
-                        ->all())
+                SelectFilter::make('brand_id')
+                    ->label('Brand')
+                    ->options(fn (): array => Brand::query()->orderBy('name')->pluck('name', 'id')->all())
                     ->searchable()
                     ->preload(),
 
-                TernaryFilter::make('track_expiry')
-                    ->label('Expiry tracking')
-                    ->placeholder('All products'),
+                SelectFilter::make('categories')
+                    ->label('Category')
+                    ->relationship('categories', 'name')
+                    ->searchable()
+                    ->preload(),
 
                 TrashedFilter::make(),
             ])

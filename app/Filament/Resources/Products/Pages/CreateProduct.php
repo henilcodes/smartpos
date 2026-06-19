@@ -17,16 +17,16 @@ class CreateProduct extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $userId = Auth::id();
-
-        if ($userId) {
-            $data['created_by'] = $userId;
-            $data['updated_by'] = $userId;
+        if (blank($data['sku'] ?? null)) {
+            $data['sku'] = Str::upper(Str::slug($data['name'] ?? '', '-'));
         }
 
-        $data['slug'] = Str::slug($data['name'] ?? '');
-
         return $data;
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('edit', ['record' => $this->record]);
     }
 
     protected function afterCreate(): void

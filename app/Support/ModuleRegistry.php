@@ -11,6 +11,15 @@ class ModuleRegistry
     {
         return [
             'products' => 'Products',
+            'categories' => 'Categories',
+            'category_groups' => 'Category groups',
+            'brands' => 'Brands',
+            'inventories' => 'Inventories',
+            'customers' => 'Customers',
+            'suppliers' => 'Suppliers',
+            'taxes' => 'Taxes',
+            'tax_groups' => 'Tax groups',
+            'settings' => 'Settings',
             'users' => 'Users',
             'sessions' => 'Sessions',
         ];

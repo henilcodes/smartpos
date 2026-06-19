@@ -7,17 +7,20 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Tax extends Model
 {
-    protected $fillable = ['name', 'rate', 'is_active', 'type'];
-    protected $hidden = ['pivot'];
+    protected $fillable = [
+        'name',
+        'rate',
+        'type',
+    ];
 
     protected function casts(): array
     {
         return [
-            'is_active' => 'boolean',
+            'rate' => 'decimal:2',
         ];
     }
 
-    public function taxGroup(): BelongsToMany
+    public function taxGroups(): BelongsToMany
     {
         return $this->belongsToMany(TaxGroup::class, 'tax_group_items');
     }

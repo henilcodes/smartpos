@@ -9,8 +9,6 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\RestoreAction;
 use Filament\Resources\Pages\EditRecord;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 
 class EditProduct extends EditRecord
 {
@@ -28,18 +26,5 @@ class EditProduct extends EditRecord
             ])
                 ->tooltip('Actions'),
         ];
-    }
-
-    protected function mutateFormDataBeforeSave(array $data): array
-    {
-        $userId = Auth::id();
-
-        if ($userId) {
-            $data['updated_by'] = $userId;
-        }
-
-        $data['slug'] = Str::slug($data['name'] ?? '');
-
-        return $data;
     }
 }

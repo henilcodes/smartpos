@@ -2,23 +2,25 @@
 
 namespace App\Models;
 
-use App\Models\Shop\Product;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class TaxGroup extends Model
 {
-    protected $fillable = ['name', 'notes','hsn'];
-    protected $hidden = ['pivot'];
+    protected $fillable = [
+        'name',
+        'notes',
+        'hsn',
+    ];
 
     public function taxes(): BelongsToMany
     {
-        return $this->belongsToMany(Tax::class, 'tax_group_items', 'tax_group_id', 'tax_id');    
+        return $this->belongsToMany(Tax::class, 'tax_group_items');
     }
 
-    public function products(){
+    public function products(): HasMany
+    {
         return $this->hasMany(Product::class);
     }
 }

@@ -11,10 +11,11 @@ use Filament\Schemas\Components\EmbeddedSchema;
 use Filament\Schemas\Components\Form;
 use Filament\Schemas\Components\Group;
 use Filament\Schemas\Schema;
-use Filament\Support\Enums\Alignment;
 
 trait HasFormActionsAtTopAndBottom
 {
+    use AlignsFormActionsStart;
+
     public function content(Schema $schema): Schema
     {
         if (
@@ -57,7 +58,7 @@ trait HasFormActionsAtTopAndBottom
     protected function getTopFormActionsContentComponent(): Component
     {
         return Actions::make($this->getFormActions())
-            ->alignment(Alignment::End)
+            ->alignment($this->getFormActionsAlignment())
             ->fullWidth($this->hasFullWidthFormActions())
             ->key('form-actions-header');
     }
@@ -65,7 +66,7 @@ trait HasFormActionsAtTopAndBottom
     protected function getBottomFormActionsContentComponent(): Component
     {
         return Actions::make($this->getBottomFormActions())
-            ->alignment(Alignment::End)
+            ->alignment($this->getFormActionsAlignment())
             ->fullWidth($this->hasFullWidthFormActions())
             ->sticky(false)
             ->extraAttributes([

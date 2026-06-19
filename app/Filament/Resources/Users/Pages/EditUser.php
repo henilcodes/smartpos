@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Users\Pages;
 
-use App\Filament\Resources\Concerns\HasFormActionsAtTopAndBottom;
+use App\Filament\Resources\Concerns\AlignsFormActionsStart;
 use App\Filament\Resources\Users\UserResource;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\DeleteAction;
@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 
 class EditUser extends EditRecord
 {
-    use HasFormActionsAtTopAndBottom;
+    use AlignsFormActionsStart;
 
     protected static string $resource = UserResource::class;
 

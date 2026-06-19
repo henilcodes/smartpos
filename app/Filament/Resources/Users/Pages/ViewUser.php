@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\Users\Pages;
 
 use App\Filament\Resources\Users\UserResource;
-use Filament\Actions\ActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
@@ -16,19 +15,9 @@ class ViewUser extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
+            DeleteAction::make()
+                ->hidden(fn (): bool => $this->record->is(Auth::user())),
             EditAction::make(),
-            ActionGroup::make([
-                DeleteAction::make()
-                    ->hidden(fn (): bool => $this->record->is(Auth::user())),
-            ])
-                ->tooltip('More actions'),
         ];
-    }
-
-    protected function mutateFormDataBeforeFill(array $data): array
-    {
-        $data['is_verified'] = filled($this->record->email_verified_at);
-
-        return $data;
     }
 }
