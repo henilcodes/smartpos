@@ -9,5 +9,6 @@
     <script>
         window.__smartposKeyboardShortcuts = @json($shortcutsPayload);
     </script>
+    <script src="{{ asset('js/key-combination-input.js') }}"></script>
     <script src="{{ asset('js/filament-keyboard-shortcuts.js') }}" defer></script>
 @endauth

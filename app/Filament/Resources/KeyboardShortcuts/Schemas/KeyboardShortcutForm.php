@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\KeyboardShortcuts\Schemas;
 
+use App\Filament\Forms\Components\KeyCombinationInput;
 use App\Models\KeyboardShortcut;
 use App\Support\KeyboardShortcutActionTypes;
 use App\Support\KeyboardShortcutCombination;
@@ -31,16 +32,15 @@ class KeyboardShortcutForm
                                     ->required()
                                     ->maxLength(255),
 
-                                TextInput::make('combination')
+                                KeyCombinationInput::make('combination')
                                     ->required()
                                     ->maxLength(255)
                                     ->unique(table: KeyboardShortcut::class, ignoreRecord: true)
-                                    ->helperText('Examples: CTRL+SHIFT+I, ALT+S, F2, ESC')
                                     ->dehydrateStateUsing(fn (?string $state): string => KeyboardShortcutCombination::normalize($state))
                                     ->rules([
                                         fn (): \Closure => function (string $attribute, mixed $value, \Closure $fail): void {
                                             if (! KeyboardShortcutCombination::isValid($value)) {
-                                                $fail('Enter a valid shortcut such as CTRL+SHIFT+P or F2.');
+                                                $fail('Press a valid shortcut such as CTRL+SHIFT+P or F2.');
                                             }
                                         },
                                     ]),
